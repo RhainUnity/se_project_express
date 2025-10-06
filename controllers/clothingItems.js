@@ -6,6 +6,9 @@ const getClothingItems = (req, res) => {
     .find({})
     .then((items) => res.send(items))
     .catch((err) => {
+      if (err.name === "CastError") {
+        return res.status(400).send({ message: "Invalid item ID", error: err });
+      }
       console.error(err);
       res.status(500).send({ message: "Error retrieving items", error: err });
     });
@@ -19,6 +22,11 @@ const createClothingItem = (req, res) => {
     .then((item) => res.status(201).send(item))
     .catch((err) => {
       console.error(err);
+      if (err.name === "ValidationError") {
+        return res
+          .status(400)
+          .send({ message: "Invalid item data", error: err });
+      }
       res.status(500).send({ message: "Error creating item", error: err });
     });
 };

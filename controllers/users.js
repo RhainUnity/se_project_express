@@ -22,6 +22,9 @@ const getUserById = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
+      if (err.name === "CastError") {
+        return res.status(400).send({ message: "Invalid user ID", error: err });
+      }
       res.status(500).send({ message: "Error retrieving user", error: err });
     });
 };
@@ -34,6 +37,11 @@ const createUser = (req, res) => {
     .then((user) => res.status(201).send(user))
     .catch((err) => {
       console.error(err);
+      if (err.name === "ValidationError") {
+        return res
+          .status(400)
+          .send({ message: "Invalid user data", error: err });
+      }
       res.status(500).send({ message: "Error creating user", error: err });
     });
 };
