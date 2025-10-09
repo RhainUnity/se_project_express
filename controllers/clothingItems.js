@@ -2,18 +2,12 @@ const mongoose = require("mongoose");
 const ClothingItem = require("../models/clothingItem");
 
 // GET /items
-const getClothingItems = (req, res) => {
-  return ClothingItem.find({})
+const getClothingItems = (req, res) =>
+  ClothingItem.find({})
     .then((items) => res.status(200).send(items))
-    .catch((err) => {
-      if (err.name === "CastError") {
-        return res.status(400).send({ message: "Invalid item ID", error: err });
-      }
-      return res
-        .status(500)
-        .send({ message: "Error retrieving items", error: err });
-    });
-};
+    .catch((err) =>
+      res.status(500).send({ message: "Error retrieving items", error: err })
+    );
 
 // POST /items
 const createClothingItem = (req, res) => {
@@ -62,11 +56,9 @@ const deleteClothingItem = (req, res) => {
         ? res.status(200).send({ message: "Item deleted successfully", item })
         : res.status(404).send({ message: "Item not found" })
     )
-    .catch((err) => {
-      return res
-        .status(500)
-        .send({ message: "Error deleting item", error: err });
-    });
+    .catch((err) =>
+      res.status(500).send({ message: "Error deleting item", error: err })
+    );
 };
 
 const likeItem = (req, res) => {
