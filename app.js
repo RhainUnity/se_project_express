@@ -14,11 +14,11 @@ app.use(express.json());
 
 /////////////////////
 ///////////////////
-// app.use((req, res, next) => {
-//   // put a real ObjectId from your users collection here
-//   req.user = { _id: "66f1e8c2b7f2b1a1c8c12345" };
-//   next();
-// });
+app.use((req, res, next) => {
+  // put a real ObjectId from your users collection here
+  req.user = { _id: "68e4aa49732cd7ee792fb455" };
+  next();
+});
 /////////////////////
 ///////////////////
 
