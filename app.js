@@ -12,15 +12,15 @@ mongoose
 
 app.use(express.json());
 
-/////////////////////
-///////////////////
+// Middleware to simulate authentication
+//
 app.use((req, res, next) => {
   // put a real ObjectId from your users collection here
   req.user = { _id: "68e4aa49732cd7ee792fb455" };
   next();
 });
-/////////////////////
-///////////////////
+//
+//
 
 app.use("/", mainRouter);
 //

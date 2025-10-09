@@ -2,15 +2,16 @@ const User = require("../models/user");
 
 // GET /users
 const getUsers = (req, res) => {
-  User.find({})
+  return User.find({})
     .orFail()
     .then((users) => res.send(users))
     .catch((err) => {
-      console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(404).send({ message: "No users found", error: err });
       }
-      res.status(500).send({ message: "Error retrieving users", error: err });
+      return res
+        .status(500)
+        .send({ message: "Error retrieving users", error: err });
     });
 };
 
@@ -23,16 +24,17 @@ const getUserById = (req, res) => {
       if (!user) {
         return res.status(404).send({ message: "User not found" });
       }
-      res.send(user);
+      return res.send(user);
     })
     .catch((err) => {
-      console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(404).send({ message: "User not found", error: err });
       } else if (err.name === "CastError") {
         return res.status(400).send({ message: "Invalid user ID", error: err });
       }
-      res.status(500).send({ message: "Error retrieving user", error: err });
+      return res
+        .status(500)
+        .send({ message: "Error retrieving user", error: err });
     });
 };
 
@@ -49,7 +51,9 @@ const createUser = (req, res) => {
           .status(400)
           .send({ message: "Invalid user data", error: err });
       }
-      res.status(500).send({ message: "Error creating user", error: err });
+      return res
+        .status(500)
+        .send({ message: "Error creating user", error: err });
     });
 };
 
