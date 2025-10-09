@@ -3,14 +3,16 @@ const ClothingItem = require("../models/clothingItem");
 
 // GET /items
 const getClothingItems = (req, res) => {
-  ClothingItem.find({})
+  return ClothingItem.find({})
     .then((items) => res.status(200).send(items))
     .catch((err) => {
-      console.error(err);
+      // console.error(err);
       if (err.name === "CastError") {
         return res.status(400).send({ message: "Invalid item ID", error: err });
       }
-      res.status(500).send({ message: "Error retrieving items", error: err });
+      return res
+        .status(500)
+        .send({ message: "Error retrieving items", error: err });
     });
 };
 
@@ -26,16 +28,25 @@ const createClothingItem = (req, res) => {
       .send({ message: "Owner is required to create an item" });
   }
 
-  ClothingItem.create({ name, weather, imageUrl, owner, likes, createdAt })
+  return ClothingItem.create({
+    name,
+    weather,
+    imageUrl,
+    owner,
+    likes,
+    createdAt,
+  })
     .then((item) => res.status(201).send(item))
     .catch((err) => {
-      console.error(err);
+      // console.error(err);
       if (err.name === "ValidationError") {
         return res
           .status(400)
           .send({ message: "Invalid item data", error: err });
       }
-      res.status(500).send({ message: "Error creating item", error: err });
+      return res
+        .status(500)
+        .send({ message: "Error creating item", error: err });
     });
 };
 
@@ -47,7 +58,7 @@ const deleteClothingItem = (req, res) => {
     return res.status(400).send({ message: "Invalid item ID" });
   }
 
-  ClothingItem.findByIdAndDelete(itemId)
+  return ClothingItem.findByIdAndDelete(itemId)
     .then((item) => {
       if (!item) {
         return res.status(404).send({ message: "Item not found" });
@@ -57,8 +68,10 @@ const deleteClothingItem = (req, res) => {
         .send({ message: "Item deleted successfully", item });
     })
     .catch((err) => {
-      console.error(err);
-      res.status(500).send({ message: "Error deleting item", error: err });
+      // console.error(err);
+      return res
+        .status(500)
+        .send({ message: "Error deleting item", error: err });
     });
 };
 
