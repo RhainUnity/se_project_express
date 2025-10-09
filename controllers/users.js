@@ -1,8 +1,8 @@
 const User = require("../models/user");
 
 // GET /users
-const getUsers = (req, res) => {
-  return User.find({})
+const getUsers = (req, res) =>
+  User.find({})
     .orFail()
     .then((users) => res.send(users))
     .catch((err) => {
@@ -13,7 +13,6 @@ const getUsers = (req, res) => {
         .status(500)
         .send({ message: "Error retrieving users", error: err });
     });
-};
 
 // GET /users/:userId
 const getUserById = (req, res) => {
