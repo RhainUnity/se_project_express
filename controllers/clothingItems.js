@@ -68,7 +68,7 @@ const likeItem = (req, res) => {
     return res.status(400).send({ message: "Invalid item ID" });
   }
 
-  ClothingItem.findByIdAndUpdate(
+  return ClothingItem.findByIdAndUpdate(
     itemId,
     { $addToSet: { likes: req.user._id } }, // add _id to the array if it's not there yet
     { new: true }
@@ -80,11 +80,11 @@ const likeItem = (req, res) => {
       return res.status(200).send(item);
     })
     .catch((err) => {
-      console.error(err);
+      // console.error(err);
       if (err.name === "CastError") {
         return res.status(400).send({ message: "Invalid item ID", error: err });
       }
-      res.status(500).send({ message: "Error liking item", error: err });
+      return res.status(500).send({ message: "Error liking item", error: err });
     });
 };
 
@@ -94,7 +94,7 @@ const dislikeItem = (req, res) => {
     return res.status(400).send({ message: "Invalid item ID" });
   }
 
-  ClothingItem.findByIdAndUpdate(
+  return ClothingItem.findByIdAndUpdate(
     itemId,
     { $pull: { likes: req.user._id } }, // remove _id from the array
     { new: true }
@@ -106,11 +106,13 @@ const dislikeItem = (req, res) => {
       return res.status(200).send(item);
     })
     .catch((err) => {
-      console.error(err);
+      // console.error(err);
       if (err.name === "CastError") {
         return res.status(400).send({ message: "Invalid item ID", error: err });
       }
-      res.status(500).send({ message: "Error unliking item", error: err });
+      return res
+        .status(500)
+        .send({ message: "Error unliking item", error: err });
     });
 };
 
