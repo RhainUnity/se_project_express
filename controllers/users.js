@@ -18,7 +18,7 @@ const getUsers = (req, res) => {
 // GET /users/:userId
 const getUserById = (req, res) => {
   const { userId } = req.params;
-  User.findById(userId)
+  return User.findById(userId)
     .orFail()
     .then((user) => {
       if (!user) {
@@ -29,7 +29,8 @@ const getUserById = (req, res) => {
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(404).send({ message: "User not found", error: err });
-      } else if (err.name === "CastError") {
+      }
+      if (err.name === "CastError") {
         return res.status(400).send({ message: "Invalid user ID", error: err });
       }
       return res
@@ -45,7 +46,6 @@ const createUser = (req, res) => {
   User.create({ name, avatar })
     .then((user) => res.status(201).send(user))
     .catch((err) => {
-      console.error(err);
       if (err.name === "ValidationError") {
         return res
           .status(400)
