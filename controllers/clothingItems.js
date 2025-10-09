@@ -6,7 +6,6 @@ const getClothingItems = (req, res) => {
   return ClothingItem.find({})
     .then((items) => res.status(200).send(items))
     .catch((err) => {
-      // console.error(err);
       if (err.name === "CastError") {
         return res.status(400).send({ message: "Invalid item ID", error: err });
       }
@@ -38,7 +37,6 @@ const createClothingItem = (req, res) => {
   })
     .then((item) => res.status(201).send(item))
     .catch((err) => {
-      // console.error(err);
       if (err.name === "ValidationError") {
         return res
           .status(400)
@@ -59,16 +57,12 @@ const deleteClothingItem = (req, res) => {
   }
 
   return ClothingItem.findByIdAndDelete(itemId)
-    .then((item) => {
-      if (!item) {
-        return res.status(404).send({ message: "Item not found" });
-      }
-      return res
-        .status(200)
-        .send({ message: "Item deleted successfully", item });
-    })
+    .then((item) =>
+      item
+        ? res.status(200).send({ message: "Item deleted successfully", item })
+        : res.status(404).send({ message: "Item not found" })
+    )
     .catch((err) => {
-      // console.error(err);
       return res
         .status(500)
         .send({ message: "Error deleting item", error: err });
@@ -86,14 +80,12 @@ const likeItem = (req, res) => {
     { $addToSet: { likes: req.user._id } }, // add _id to the array if it's not there yet
     { new: true }
   )
-    .then((item) => {
-      if (!item) {
-        return res.status(404).send({ message: "Item not found" });
-      }
-      return res.status(200).send(item);
-    })
+    .then((item) =>
+      item
+        ? res.status(200).send(item)
+        : res.status(404).send({ message: "Item not found" })
+    )
     .catch((err) => {
-      // console.error(err);
       if (err.name === "CastError") {
         return res.status(400).send({ message: "Invalid item ID", error: err });
       }
@@ -112,14 +104,12 @@ const dislikeItem = (req, res) => {
     { $pull: { likes: req.user._id } }, // remove _id from the array
     { new: true }
   )
-    .then((item) => {
-      if (!item) {
-        return res.status(404).send({ message: "Item not found" });
-      }
-      return res.status(200).send(item);
-    })
+    .then((item) =>
+      item
+        ? res.status(200).send(item)
+        : res.status(404).send({ message: "Item not found" })
+    )
     .catch((err) => {
-      // console.error(err);
       if (err.name === "CastError") {
         return res.status(400).send({ message: "Invalid item ID", error: err });
       }
