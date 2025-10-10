@@ -1,17 +1,22 @@
 const User = require("../models/user");
+const {
+  NOT_FOUND_ERROR_CODE,
+  BAD_REQUEST_ERROR_CODE,
+} = require("../utils/errors");
 
 // GET /users
 const getUsers = (req, res) =>
   User.find({})
-    .orFail()
     .then((users) => res.send(users))
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
-        return res.status(404).send({ message: "No users found", error: err });
+        return res
+          .status(NOT_FOUND_ERROR_CODE)
+          .send({ message: "No users found" });
       }
       return res
-        .status(500)
-        .send({ message: "Error retrieving users", error: err });
+        .status(INTERNAL_SERVER_ERROR_CODE)
+        .send({ message: "An error has occurred on the server" });
     });
 
 // GET /users/:userId
@@ -21,20 +26,26 @@ const getUserById = (req, res) => {
     .orFail()
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ message: "User not found" });
+        return res
+          .status(NOT_FOUND_ERROR_CODE)
+          .send({ message: "User not found" });
       }
       return res.send(user);
     })
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
-        return res.status(404).send({ message: "User not found", error: err });
+        return res
+          .status(NOT_FOUND_ERROR_CODE)
+          .send({ message: "User not found" });
       }
       if (err.name === "CastError") {
-        return res.status(400).send({ message: "Invalid user ID", error: err });
+        return res
+          .status(BAD_REQUEST_ERROR_CODE)
+          .send({ message: "Invalid user ID" });
       }
       return res
-        .status(500)
-        .send({ message: "Error retrieving user", error: err });
+        .status(INTERNAL_SERVER_ERROR_CODE)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -47,12 +58,12 @@ const createUser = (req, res) => {
     .catch((err) => {
       if (err.name === "ValidationError") {
         return res
-          .status(400)
-          .send({ message: "Invalid user data", error: err });
+          .status(BAD_REQUEST_ERROR_CODE)
+          .send({ message: "Invalid user data" });
       }
       return res
-        .status(500)
-        .send({ message: "Error creating user", error: err });
+        .status(INTERNAL_SERVER_ERROR_CODE)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 

@@ -1,23 +1,30 @@
 const mongoose = require("mongoose");
 const ClothingItem = require("../models/clothingItem");
+const {
+  INTERNAL_SERVER_ERROR_CODE,
+  BAD_REQUEST_ERROR_CODE,
+  NOT_FOUND_ERROR_CODE,
+} = require("../utils/errors");
 
 // GET /items
 const getClothingItems = (req, res) =>
   ClothingItem.find({})
     .then((items) => res.status(200).send(items))
     .catch((err) =>
-      res.status(500).send({ message: "Error retrieving items", error: err })
+      res.status(INTERNAL_SERVER_ERROR_CODE).send({
+        message: "An error has occurred on the server",
+      })
     );
 
 // POST /items
 const createClothingItem = (req, res) => {
-  const { name, weather, imageUrl, likes, createdAt } = req.body;
+  const { name, weather, imageUrl } = req.body;
   // prefer the authenticated user id; fallback to owner in request body
   const owner = (req.user && req.user._id) || req.body.owner;
 
   if (!owner) {
     return res
-      .status(400)
+      .status(BAD_REQUEST_ERROR_CODE)
       .send({ message: "Owner is required to create an item" });
   }
 
@@ -33,12 +40,12 @@ const createClothingItem = (req, res) => {
     .catch((err) => {
       if (err.name === "ValidationError") {
         return res
-          .status(400)
-          .send({ message: "Invalid item data", error: err });
+          .status(BAD_REQUEST_ERROR_CODE)
+          .send({ message: "Invalid item data" });
       }
       return res
-        .status(500)
-        .send({ message: "Error creating item", error: err });
+        .status(INTERNAL_SERVER_ERROR_CODE)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -47,24 +54,30 @@ const deleteClothingItem = (req, res) => {
   const { itemId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(itemId)) {
-    return res.status(400).send({ message: "Invalid item ID" });
+    return res
+      .status(BAD_REQUEST_ERROR_CODE)
+      .send({ message: "Invalid item ID" });
   }
 
   return ClothingItem.findByIdAndDelete(itemId)
     .then((item) =>
       item
         ? res.status(200).send({ message: "Item deleted successfully", item })
-        : res.status(404).send({ message: "Item not found" })
+        : res.status(NOT_FOUND_ERROR_CODE).send({ message: "Item not found" })
     )
     .catch((err) =>
-      res.status(500).send({ message: "Error deleting item", error: err })
+      res
+        .status(INTERNAL_SERVER_ERROR_CODE)
+        .send({ message: "Error deleting item" })
     );
 };
 
 const likeItem = (req, res) => {
   const { itemId } = req.params;
   if (!mongoose.Types.ObjectId.isValid(itemId)) {
-    return res.status(400).send({ message: "Invalid item ID" });
+    return res
+      .status(BAD_REQUEST_ERROR_CODE)
+      .send({ message: "Invalid item ID" });
   }
 
   return ClothingItem.findByIdAndUpdate(
@@ -75,20 +88,26 @@ const likeItem = (req, res) => {
     .then((item) =>
       item
         ? res.status(200).send(item)
-        : res.status(404).send({ message: "Item not found" })
+        : res.status(NOT_FOUND_ERROR_CODE).send({ message: "Item not found" })
     )
     .catch((err) => {
       if (err.name === "CastError") {
-        return res.status(400).send({ message: "Invalid item ID", error: err });
+        return res
+          .status(BAD_REQUEST_ERROR_CODE)
+          .send({ message: "Invalid item ID" });
       }
-      return res.status(500).send({ message: "Error liking item", error: err });
+      return res
+        .status(INTERNAL_SERVER_ERROR_CODE)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
 const dislikeItem = (req, res) => {
   const { itemId } = req.params;
   if (!mongoose.Types.ObjectId.isValid(itemId)) {
-    return res.status(400).send({ message: "Invalid item ID" });
+    return res
+      .status(BAD_REQUEST_ERROR_CODE)
+      .send({ message: "Invalid item ID" });
   }
 
   return ClothingItem.findByIdAndUpdate(
@@ -99,15 +118,17 @@ const dislikeItem = (req, res) => {
     .then((item) =>
       item
         ? res.status(200).send(item)
-        : res.status(404).send({ message: "Item not found" })
+        : res.status(NOT_FOUND_ERROR_CODE).send({ message: "Item not found" })
     )
     .catch((err) => {
       if (err.name === "CastError") {
-        return res.status(400).send({ message: "Invalid item ID", error: err });
+        return res
+          .status(BAD_REQUEST_ERROR_CODE)
+          .send({ message: "Invalid item ID" });
       }
       return res
-        .status(500)
-        .send({ message: "Error unliking item", error: err });
+        .status(INTERNAL_SERVER_ERROR_CODE)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 

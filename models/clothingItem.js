@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 
-const clothgingItemSchema = new mongoose.Schema({
+const clothingItemSchema = new mongoose.Schema({
   name: { type: String, required: true, minlength: 2, maxlength: 30 },
   weather: { type: String, required: true, enum: ["hot", "warm", "cold"] },
   imageUrl: {
@@ -17,4 +17,4 @@ const clothgingItemSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model("clothingItem", clothgingItemSchema);
+module.exports = mongoose.model("clothingItem", clothingItemSchema);
