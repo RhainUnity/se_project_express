@@ -33,8 +33,6 @@ const createClothingItem = (req, res) => {
     weather,
     imageUrl,
     owner,
-    likes,
-    createdAt,
   })
     .then((item) => res.status(201).send(item))
     .catch((err) => {
@@ -65,7 +63,7 @@ const deleteClothingItem = (req, res) => {
         ? res.status(200).send({ message: "Item deleted successfully", item })
         : res.status(NOT_FOUND_ERROR_CODE).send({ message: "Item not found" })
     )
-    .catch((err) =>
+    .catch(() =>
       res
         .status(INTERNAL_SERVER_ERROR_CODE)
         .send({ message: "Error deleting item" })

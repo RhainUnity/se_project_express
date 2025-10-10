@@ -2,6 +2,7 @@ const User = require("../models/user");
 const {
   NOT_FOUND_ERROR_CODE,
   BAD_REQUEST_ERROR_CODE,
+  INTERNAL_SERVER_ERROR_CODE,
 } = require("../utils/errors");
 
 // GET /users
