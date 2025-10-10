@@ -10,7 +10,7 @@ const {
 const getClothingItems = (req, res) =>
   ClothingItem.find({})
     .then((items) => res.status(200).send(items))
-    .catch((err) =>
+    .catch(() =>
       res.status(INTERNAL_SERVER_ERROR_CODE).send({
         message: "An error has occurred on the server",
       })
