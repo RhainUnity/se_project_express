@@ -9,11 +9,11 @@ const {
 const getUsers = (req, res) =>
   User.find({})
     .then((users) => res.send(users))
-    .catch(() => {
-      return res
+    .catch(() =>
+      res
         .status(INTERNAL_SERVER_ERROR_CODE)
-        .send({ message: "An error has occurred on the server" });
-    });
+        .send({ message: "An error has occurred on the server" })
+    );
 
 // GET /users/:userId
 const getUserById = (req, res) => {
