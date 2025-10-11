@@ -19,9 +19,7 @@ const getClothingItems = (req, res) =>
 // POST /items
 const createClothingItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
-  // prefer the authenticated user id; fallback to owner in request body
-  const owner = (req.user && req.user._id) || req.body.owner;
-
+  const owner = req.user._id;
   if (!owner) {
     return res
       .status(BAD_REQUEST_ERROR_CODE)

@@ -9,12 +9,7 @@ const {
 const getUsers = (req, res) =>
   User.find({})
     .then((users) => res.send(users))
-    .catch((err) => {
-      if (err.name === "DocumentNotFoundError") {
-        return res
-          .status(NOT_FOUND_ERROR_CODE)
-          .send({ message: "No users found" });
-      }
+    .catch(() => {
       return res
         .status(INTERNAL_SERVER_ERROR_CODE)
         .send({ message: "An error has occurred on the server" });
