@@ -1,3 +1,4 @@
+// controllers/users.js
 const User = require("../models/user");
 const {
   NOT_FOUND_ERROR_CODE,
@@ -19,19 +20,12 @@ const getUsers = (req, res) =>
         .send({ message: "An error has occurred on the server" })
     );
 
-// GET /users/:userId
-const getUserById = (req, res) => {
-  const { userId } = req.params;
+// GET /users/me
+const getCurrentUser = (req, res) => {
+  const userId = req.user._id;
   return User.findById(userId)
     .orFail()
-    .then((user) => {
-      if (!user) {
-        return res
-          .status(NOT_FOUND_ERROR_CODE)
-          .send({ message: "User not found" });
-      }
-      return res.send(user);
-    })
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
         return res
@@ -49,7 +43,7 @@ const getUserById = (req, res) => {
     });
 };
 
-// POST /users
+// POST / create users
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
 
@@ -69,14 +63,11 @@ const createUser = (req, res) => {
         avatar,
       })
     )
-    .then((user) =>
-      res.status(201).send({
-        _id: user._id,
-        email: user.email,
-        name: user.name,
-        avatar: user.avatar,
-      })
-    )
+    .then((user) => {
+      const userObj = user.toObject();
+      delete userObj.password;
+      res.status(201).send(userObj);
+    })
     .catch((err) => {
       if (err && err.code === 11000) {
         return res
@@ -94,14 +85,14 @@ const createUser = (req, res) => {
     });
 };
 
-module.exports = { getUsers, createUser, getUserById };
-
 // POST /signin  //////////
 const login = (req, res) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: "7d" });
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+        expiresIn: "7d",
+      });
       return res.send({ token });
     })
     .catch(() =>
@@ -109,4 +100,29 @@ const login = (req, res) => {
     );
 };
 
-module.exports = { getUsers, createUser, getUserById, login };
+// PATCH /users/me - update user profile
+const updateUser = (req, res) => {
+  const userId = req.user._id;
+  const { name, avatar } = req.body;
+
+  return User.findByIdAndUpdate(userId, { name, avatar }, { new: true })
+    .orFail()
+    .then((user) => res.send(user))
+    .catch((err) => {
+      if (err.name === "DocumentNotFoundError") {
+        return res
+          .status(NOT_FOUND_ERROR_CODE)
+          .send({ message: "User not found" });
+      }
+      if (err.name === "ValidationError") {
+        return res
+          .status(BAD_REQUEST_ERROR_CODE)
+          .send({ message: "Invalid user data" });
+      }
+      return res
+        .status(INTERNAL_SERVER_ERROR_CODE)
+        .send({ message: "An error has occurred on the server" });
+    });
+};
+
+module.exports = { getUsers, createUser, getCurrentUser, login, updateUser };
