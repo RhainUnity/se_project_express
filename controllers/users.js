@@ -3,7 +3,11 @@ const {
   NOT_FOUND_ERROR_CODE,
   BAD_REQUEST_ERROR_CODE,
   INTERNAL_SERVER_ERROR_CODE,
+  CONFLICT_ERROR_CODE,
 } = require("../utils/errors");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../utils/config");
 
 // GET /users
 const getUsers = (req, res) =>
@@ -47,11 +51,38 @@ const getUserById = (req, res) => {
 
 // POST /users
 const createUser = (req, res) => {
-  const { name, avatar } = req.body;
+  const { name, avatar, email, password } = req.body;
 
-  User.create({ name, avatar })
-    .then((user) => res.status(201).send(user))
+  if (!email || !password || !name || !avatar) {
+    return res
+      .status(BAD_REQUEST_ERROR_CODE)
+      .send({ message: "Missing required user fields" });
+  }
+
+  return bcrypt
+    .hash(password, 10)
+    .then((hash) =>
+      User.create({
+        email,
+        password: hash,
+        name,
+        avatar,
+      })
+    )
+    .then((user) =>
+      res.status(201).send({
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+        avatar: user.avatar,
+      })
+    )
     .catch((err) => {
+      if (err && err.code === 11000) {
+        return res
+          .status(CONFLICT_ERROR_CODE)
+          .send({ message: "A user with this email already exists" });
+      }
       if (err.name === "ValidationError") {
         return res
           .status(BAD_REQUEST_ERROR_CODE)
@@ -64,3 +95,18 @@ const createUser = (req, res) => {
 };
 
 module.exports = { getUsers, createUser, getUserById };
+
+// POST /signin  //////////
+const login = (req, res) => {
+  const { email, password } = req.body;
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: "7d" });
+      return res.send({ token });
+    })
+    .catch(() =>
+      res.status(401).send({ message: "Incorrect email or password" })
+    );
+};
+
+module.exports = { getUsers, createUser, getUserById, login };
