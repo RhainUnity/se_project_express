@@ -1,4 +1,6 @@
 // controllers/users.js
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 const {
   NOT_FOUND_ERROR_CODE,
@@ -6,8 +8,7 @@ const {
   INTERNAL_SERVER_ERROR_CODE,
   CONFLICT_ERROR_CODE,
 } = require("../utils/errors");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+
 const { JWT_SECRET } = require("../utils/config");
 
 // GET /users

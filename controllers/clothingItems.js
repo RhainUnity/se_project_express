@@ -53,7 +53,7 @@ const deleteClothingItem = (req, res) => {
   const owner = req.user._id;
   if (!owner) {
     return res
-      .status(BAD_REQUEST_ERROR_CODE)
+      .status(FORBIDDEN_ERROR_CODE)
       .send({ message: "Owner is required to delete an item" });
   }
   if (!mongoose.Types.ObjectId.isValid(itemId)) {
