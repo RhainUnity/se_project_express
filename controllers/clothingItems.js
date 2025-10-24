@@ -4,6 +4,7 @@ const {
   INTERNAL_SERVER_ERROR_CODE,
   BAD_REQUEST_ERROR_CODE,
   NOT_FOUND_ERROR_CODE,
+  FORBIDDEN_ERROR_CODE,
 } = require("../utils/errors");
 
 // GET /items
@@ -49,6 +50,12 @@ const createClothingItem = (req, res) => {
 const deleteClothingItem = (req, res) => {
   const { itemId } = req.params;
 
+  const owner = req.user._id;
+  if (!owner) {
+    return res
+      .status(BAD_REQUEST_ERROR_CODE)
+      .send({ message: "Owner is required to delete an item" });
+  }
   if (!mongoose.Types.ObjectId.isValid(itemId)) {
     return res
       .status(BAD_REQUEST_ERROR_CODE)
