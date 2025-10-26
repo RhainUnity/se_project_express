@@ -49,25 +49,32 @@ const createClothingItem = (req, res) => {
 // DELETE /items/:itemId
 const deleteClothingItem = (req, res) => {
   const { itemId } = req.params;
-
   const owner = req.user._id;
-  if (!owner) {
-    return res
-      .status(FORBIDDEN_ERROR_CODE)
-      .send({ message: "Owner is required to delete an item" });
-  }
+
   if (!mongoose.Types.ObjectId.isValid(itemId)) {
     return res
-      .status(FORBIDDEN_ERROR_CODE) // Changed to 403 Forbidden
+      .status(BAD_REQUEST_ERROR_CODE) // Changed to 400 Bad Request
       .send({ message: "Invalid item ID" });
   }
 
-  return ClothingItem.findByIdAndDelete(itemId)
-    .then((item) =>
-      item
-        ? res.status(200).send({ message: "Item deleted successfully", item })
-        : res.status(NOT_FOUND_ERROR_CODE).send({ message: "Item not found" })
-    )
+  return ClothingItem.findById(itemId)
+    .then((item) => {
+      if (!item) {
+        return res
+          .status(NOT_FOUND_ERROR_CODE)
+          .send({ message: "Item not found" });
+      }
+      if (item.owner.toString() !== owner) {
+        return res
+          .status(FORBIDDEN_ERROR_CODE)
+          .send({ message: "You do not have permission to delete this item" });
+      }
+      return ClothingItem.findByIdAndDelete(itemId).then((deleted) =>
+        res
+          .status(200)
+          .send({ message: "Item deleted successfully", item: deleted })
+      );
+    })
     .catch(() =>
       res
         .status(INTERNAL_SERVER_ERROR_CODE)
