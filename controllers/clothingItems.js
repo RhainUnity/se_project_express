@@ -58,7 +58,7 @@ const deleteClothingItem = (req, res) => {
   }
   if (!mongoose.Types.ObjectId.isValid(itemId)) {
     return res
-      .status(BAD_REQUEST_ERROR_CODE)
+      .status(FORBIDDEN_ERROR_CODE) // Changed to 403 Forbidden
       .send({ message: "Invalid item ID" });
   }
 

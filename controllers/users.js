@@ -96,8 +96,8 @@ const login = (req, res) => {
       });
       return res.send({ token });
     })
-    .catch(() =>
-      res.status(401).send({ message: "Incorrect email or password" })
+    .catch(
+      () => res.status(400).send({ message: "Incorrect email or password" }) // 400 Bad Request
     );
 };
 
@@ -108,7 +108,7 @@ const updateUser = (req, res) => {
 
   return User.findByIdAndUpdate(userId, { name, avatar }, { new: true })
     .orFail()
-    .then((user) => res.send(user))
+    .then((user) => res.status(200).send(user)) // 200 OK
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
         return res
