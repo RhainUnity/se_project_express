@@ -10,7 +10,7 @@ Node.js is utilized to run JavaScript server-side and handle asynchronous operat
 
 Express.js complements Node.js to simplify the creation of routes and middleware. "express.json()" is helpful for parsing JSON bodies from requests and GET, POST, DELETE, etc. requests are organized into routes based on app endpoints.
 
-The eventual goal is to create a server with an API and user authorization.
+The goal is to create a server with an API and user authorization.
 
 ## Running the Project
 

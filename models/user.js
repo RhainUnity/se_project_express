@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// Add a custom static to verify credentials ///////////
+// Custom static to verify credentials ///////////
 userSchema.statics.findUserByCredentials = function findUserByCredentials(
   email,
   password
