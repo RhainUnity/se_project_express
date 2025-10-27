@@ -12,6 +12,11 @@ Express.js complements Node.js to simplify the creation of routes and middleware
 
 The goal is to create a server with an API and user authorization.
 
+## Project Pitch Video
+
+Check out [https://drive.google.com/file/d/15Cc9exzkvg58heW0WYZXV_yFgtcLeSSz/view?usp=sharing], where I describe my
+project and some challenges I faced while building it.
+
 ## Running the Project
 
 `npm run start` — to launch the server
