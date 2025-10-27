@@ -7,19 +7,10 @@ const {
   BAD_REQUEST_ERROR_CODE,
   INTERNAL_SERVER_ERROR_CODE,
   CONFLICT_ERROR_CODE,
+  UNAUTHORIZED_ERROR_CODE,
 } = require("../utils/errors");
 
 const { JWT_SECRET } = require("../utils/config");
-
-// GET /users
-const getUsers = (req, res) =>
-  User.find({})
-    .then((users) => res.send(users))
-    .catch(() =>
-      res
-        .status(INTERNAL_SERVER_ERROR_CODE)
-        .send({ message: "An error has occurred on the server" })
-    );
 
 // GET /users/me
 const getCurrentUser = (req, res) => {
@@ -97,7 +88,10 @@ const login = (req, res) => {
       return res.send({ token });
     })
     .catch(
-      () => res.status(400).send({ message: "Incorrect email or password" }) // 400 Bad Request
+      () =>
+        res
+          .status(UNAUTHORIZED_ERROR_CODE)
+          .send({ message: "Incorrect email or password" }) // 400 Bad Request
     );
 };
 
@@ -106,7 +100,11 @@ const updateUser = (req, res) => {
   const userId = req.user._id;
   const { name, avatar } = req.body;
 
-  return User.findByIdAndUpdate(userId, { name, avatar }, { new: true })
+  return User.findByIdAndUpdate(
+    userId,
+    { name, avatar },
+    { new: true, runValidators: true }
+  )
     .orFail()
     .then((user) => res.status(200).send(user)) // 200 OK
     .catch((err) => {
@@ -126,4 +124,4 @@ const updateUser = (req, res) => {
     });
 };
 
-module.exports = { getUsers, createUser, getCurrentUser, login, updateUser };
+module.exports = { createUser, getCurrentUser, login, updateUser };
