@@ -10,7 +10,7 @@ const {
 // GET /items
 const getClothingItems = (req, res) =>
   ClothingItem.find({})
-    .then((items) => res.status(200).send(items))
+    .then((items) => res.send(items))
     .catch(() =>
       res.status(INTERNAL_SERVER_ERROR_CODE).send({
         message: "An error has occurred on the server",
@@ -97,7 +97,7 @@ const likeItem = (req, res) => {
   )
     .then((item) =>
       item
-        ? res.status(200).send(item)
+        ? res.send(item)
         : res.status(NOT_FOUND_ERROR_CODE).send({ message: "Item not found" })
     )
     .catch((err) => {
@@ -127,7 +127,7 @@ const dislikeItem = (req, res) => {
   )
     .then((item) =>
       item
-        ? res.status(200).send(item)
+        ? res.send(item)
         : res.status(NOT_FOUND_ERROR_CODE).send({ message: "Item not found" })
     )
     .catch((err) => {

@@ -117,7 +117,7 @@ const updateUser = (req, res) => {
     { new: true, runValidators: true }
   )
     .orFail()
-    .then((user) => res.status(200).send(user)) // 200 OK
+    .then((user) => res.send(user)) // 200 OK
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
         return res
