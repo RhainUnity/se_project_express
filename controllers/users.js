@@ -94,12 +94,16 @@ const login = (req, res) => {
       });
       return res.send({ token });
     })
-    .catch(
-      () =>
-        res
-          .status(UNAUTHORIZED_ERROR_CODE)
-          .send({ message: "Incorrect email or password" }) // 400 Bad Request
-    );
+    .catch((err) => {
+      if (err.message === "Incorrect email or password") {
+        return res
+          .status(UNAUTHORIZED_ERROR_CODE) // UNAUTHORIZED_ERROR_CODE is 401
+          .send({ message: "Incorrect email or password" });
+      }
+      return res
+        .status(INTERNAL_SERVER_ERROR_CODE)
+        .send({ message: "An error has occurred on the server" });
+    });
 };
 
 // PATCH /users/me - update user profile

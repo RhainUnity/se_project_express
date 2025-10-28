@@ -16,7 +16,6 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/", mainRouter);
-//
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`); // eslint-disable-line no-console
