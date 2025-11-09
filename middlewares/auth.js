@@ -19,16 +19,14 @@ module.exports = (req, res, next) => {
       .send({ message: "Authorization required" });
   }
   const token = authorization.replace("Bearer ", "");
-  let payload;
 
   try {
-    payload = jwt.verify(token, JWT_SECRET);
+    req.user = jwt.verify(token, JWT_SECRET);
   } catch (err) {
     return res
       .status(UNAUTHORIZED_ERROR_CODE)
       .send({ message: "Authorization required" });
   }
 
-  req.user = payload;
   return next();
 };

@@ -1,14 +1,15 @@
 // app.js
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const mainRouter = require("./routes/index");
 
 const app = express();
-const { PORT = 3001 } = process.env;
+const { PORT, MONGO_URL, NODE_ENV } = process.env;
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/wtwr_db")
+  .connect(MONGO_URL)
   .then(() => console.log("Connected to MongoDB")) // eslint-disable-line no-console
   .catch((err) => console.error("Could not connect to MongoDB", err)); // eslint-disable-line no-console
 
