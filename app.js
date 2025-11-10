@@ -13,8 +13,13 @@ mongoose
   .then(() => console.log("Connected to MongoDB")) // eslint-disable-line no-console
   .catch((err) => console.error("Could not connect to MongoDB", err)); // eslint-disable-line no-console
 
+app.use(
+  cors({
+    origin: ["http://localhost:3000"], // adding frontend origin
+    credentials: false, // (true if I switch to cookies later)
+  })
+);
 app.use(express.json());
-app.use(cors());
 
 app.use("/", mainRouter);
 

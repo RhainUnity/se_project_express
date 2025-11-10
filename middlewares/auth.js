@@ -1,3 +1,4 @@
+// auth.js
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../utils/config");
 const { UNAUTHORIZED_ERROR_CODE } = require("../utils/errors");
@@ -5,7 +6,7 @@ const { UNAUTHORIZED_ERROR_CODE } = require("../utils/errors");
 module.exports = (req, res, next) => {
   // shortcut to get token from header for DEV purposes!!! //
   // /////////
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV === "alpha-development") {
     // Skip auth entirely in dev
     req.user = { _id: "6729aa7d39d7e0f1dc123456" }; // <- use a valid ObjectId from your DB if possible
     return next();

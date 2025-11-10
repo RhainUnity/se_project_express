@@ -1,3 +1,4 @@
+// users.js
 const router = require("express").Router();
 const { updateUser, getCurrentUser } = require("../controllers/users");
 
