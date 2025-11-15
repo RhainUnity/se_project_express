@@ -93,7 +93,7 @@ const likeItem = (req, res) => {
 
   return ClothingItem.findByIdAndUpdate(
     itemId,
-    { $addToSet: { likes: req.user._id } }, // add _id to the array if it's not there yet
+    { $addToSet: { likes: req.user._id } }, // add _id to the array
     { new: true }
   )
     .then((item) =>
