@@ -3,7 +3,7 @@ const router = require("express").Router();
 
 const auth = require("../middlewares/auth");
 const userRouter = require("./users");
-const { NOT_FOUND_ERROR_CODE } = require("../utils/errors");
+const { NotFoundError } = require("../utils/errors");
 const { login, createUser } = require("../controllers/users");
 const { getClothingItems } = require("../controllers/clothingItems");
 
@@ -21,7 +21,7 @@ router.use("/items", clothingItemsRouter);
 
 router.use((req, res) => {
   res
-    .status(NOT_FOUND_ERROR_CODE)
+    .status(NotFoundError)
     .send({ message: "Requested resource not found" });
 });
 

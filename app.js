@@ -4,6 +4,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const mainRouter = require("./routes/index");
+const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
 const { PORT, MONGO_URL, NODE_ENV } = process.env;
@@ -22,6 +23,8 @@ app.use(
 app.use(express.json());
 
 app.use("/", mainRouter);
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`); // eslint-disable-line no-console
