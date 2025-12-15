@@ -40,8 +40,16 @@ app.use(
 
 app.use(express.json());
 
-// log requests *before* routes (optional but nice)
+// log requests *before* routes
 app.use(requestLogger);
+
+// crash test route
+app.get("/crash-test", () => {
+  setTimeout(() => {
+    throw new Error("Server will crash now");
+  }, 0);
+});
+
 
 // routes
 app.use("/", mainRouter);
