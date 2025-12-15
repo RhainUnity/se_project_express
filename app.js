@@ -50,7 +50,6 @@ app.get("/crash-test", () => {
   }, 0);
 });
 
-
 // routes
 app.use("/", mainRouter);
 
