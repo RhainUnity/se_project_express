@@ -2,6 +2,7 @@
 
 The back-end project is focused on creating a server for the WTWR application. With the help of Mongoose, the app is able to send, receive and alter data aabout the user profile and clothing items. The routes folder organizes routes based on functionality, the models maintain the rule schemas that manage the type of data that is transferred and manipulated. The controllers contain the code that executes receiving, sending, changing and deleting data organized by the routes modules.
 
+
 # Technologies used
 
 MongoDB is a document-oriented NoSQL database that stores data in flexible JSON-like documents. It is where the user profile data and clothing inventory is stored.
@@ -17,8 +18,12 @@ The goal is to create a server with an API and user authorization.
 Check out [https://drive.google.com/file/d/15Cc9exzkvg58heW0WYZXV_yFgtcLeSSz/view?usp=sharing], where I describe my
 project and some challenges I faced while building it.
 
-## Running the Project
+## Deployed Project
 
-`npm run start` — to launch the server
+- **Frontend URL:** https://jrsttwtwr2025.twilightparadox.com
+- **Backend API URL:** https://api.jrsttwtwr2025.twilightparadox.com
 
-`npm run dev` — to launch the server with the hot reload feature
+## Repositories
+
+- **Frontend repo:** https://github.com/RhainUnity/se_project_react
+- **Backend repo (this one):** https://github.com/RhainUnity/se_project_express
