@@ -64,7 +64,6 @@ const createUser = (req, res, next) => {
 
 // POST /signin
 const login = (req, res, next) => {
-  console.log("Login request body:", req.body);//   // Debugging line ///////////////////
   const { email, password } = req.body;
 
   if (!email || !password) {
